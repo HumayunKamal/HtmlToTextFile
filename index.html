@@ -2,98 +2,110 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="./favicon.ico" ">
     <title>Text to File Converter</title>
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(to right, #a78bfa, #f472b6, #f87171);
-        }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(to right, #a78bfa, #f472b6, #f87171);
+      }
 
-        .container {
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            margin: 1rem;
-            padding: 2rem;
-            justify-content: center;
-            align-items: center;
-            border-radius: 1rem;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 500px;
-        }
+      .container {
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        margin: 1rem;
+        padding: 2rem;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 500px;
+      }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 1.5rem;
-        }
+      .form_container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
 
-        input,
-        textarea {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #ddd;
-            border-radius: 0.75rem;
-            font-size: 1rem;
-            resize: none;
-            outline: none;
-            transition: border 0.3s;
-        }
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 1.5rem;
+      }
 
-        textarea {
-            height: 30dvh;
-            margin-top: 1rem;
-        }
+      input,
+      textarea {
+        font-size: 24px !important;
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        resize: none;
+        outline: none;
+        transition: border 0.3s;
+      }
 
-        input:focus,
-        textarea:focus {
-            border-color: #a78bfa;
-        }
+      textarea {
+        height: 30dvh;
+        margin-top: 1rem;
+      }
 
-        button {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.8rem;
-            background: linear-gradient(to right, #8b5cf6, #ec4899);
-            color: #fff;
-            font-size: 1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: opacity 0.3s;
-        }
+      input:focus,
+      textarea:focus {
+        border-color: #a78bfa;
+      }
 
-        button:hover {
-            opacity: 0.9;
-        }
+      button {
+        margin-top: 1.5rem;
+        width: 100%;
+        padding: 0.8rem;
+        background: linear-gradient(to right, #8b5cf6, #ec4899);
+        color: #fff;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.3s;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class=" container">
     <h1>Text to File Converter</h1>
-    <input id="fileName" type="text" placeholder="Enter Your Name and Dept." />
-    <textarea id="userText" placeholder="Type your text here..."></textarea>
-    <button onclick="downloadTxtFile()">Download as Text File</button>
+    <form onsubmit="downloadTxtFile(); return false;" class="form_container">
+        <input id="fileName" type="text" placeholder="Your Name and Dept." required />
+        <textarea id="userText" placeholder="Type your text here..." required></textarea>
+        <button type="submit">Download as Text File</button>
+    </form>
     </div>
 
     <script>
         function downloadTxtFile() {
             const text = document.getElementById("userText").value;
-            const fileName = document.getElementById("fileName").value || "myTextFile";
+            const fileName =
+                document.getElementById("fileName").value || "myTextFile";
             const element = document.createElement("a");
-            const file = new Blob([text], { type: 'text/plain' });
+            const file = new Blob([text], { type: "text/plain" });
             element.href = URL.createObjectURL(file);
             element.download = fileName + ".txt";
             document.body.appendChild(element);
