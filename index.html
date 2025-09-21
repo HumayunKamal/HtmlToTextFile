@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="./favicon.ico" ">
+    <link rel="icon" href="./favicon.ico" />
     <title>Text to File Converter</title>
     <style>
       body {
@@ -19,36 +18,37 @@
 
       .container {
         background: #fff;
+        /* margin: 2rem !important; */
         display: flex;
         flex-direction: column;
-        margin: 1rem;
-        padding: 2rem;
-        justify-content: center;
-        align-items: center;
         border-radius: 1rem;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        width: 100%;
+        width: 90dvw;
         max-width: 500px;
       }
 
+      @media (min-width: 640px) {
+        .container {
+          padding: 2rem;
+        }
+      }
       .form_container {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
-        width: 100%;
+        gap: 1rem;
+        margin: 1rem;
       }
 
       h1 {
         text-align: center;
         color: #333;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem !important;
       }
 
       input,
       textarea {
-        font-size: 24px !important;
-        width: 100%;
+        font-size: 20px !important;
         padding: 1rem;
         border: 2px solid #ddd;
         border-radius: 0.75rem;
@@ -69,7 +69,7 @@
       }
 
       button {
-        margin-top: 1.5rem;
+        /* margin-block: 1rem; */
         width: 100%;
         padding: 0.8rem;
         background: linear-gradient(to right, #8b5cf6, #ec4899);
@@ -90,28 +90,92 @@
   </head>
 
   <body>
-    <div class=" container">
-    <h1>Text to File Converter</h1>
-    <form onsubmit="downloadTxtFile(); return false;" class="form_container">
-        <input id="fileName" type="text" placeholder="Your Name and Dept." required />
-        <textarea id="userText" placeholder="Type your text here..." required></textarea>
-        <button type="submit">Download as Text File</button>
-    </form>
+    <div class="container">
+      <h1>Text to File Converter</h1>
+      <form class="form_container" onsubmit="formHandler(event)">
+        <input
+          id="fileName"
+          type="text"
+          placeholder="Your Name and Dept."
+          required
+        />
+        <textarea
+          id="userText"
+          placeholder="Type your text here..."
+          required
+        ></textarea>
+        <button type="submit" data-type="txt">Save as .txt</button>
+        <button type="submit" data-type="pdf">Save as PDF (via Print)</button>
+      </form>
     </div>
 
     <script>
-        function downloadTxtFile() {
-            const text = document.getElementById("userText").value;
-            const fileName =
-                document.getElementById("fileName").value || "myTextFile";
-            const element = document.createElement("a");
-            const file = new Blob([text], { type: "text/plain" });
-            element.href = URL.createObjectURL(file);
-            element.download = fileName + ".txt";
-            document.body.appendChild(element);
-            element.click();
+      // Event Handler
+      function formHandler(e) {
+        e.preventDefault();
+        const buttonType = e.submitter.dataset.type;
+        if (buttonType === "txt") {
+          downloadTxtFile();
+        } else {
+          downloadPDF();
         }
-    </script>
-    </body>
+      }
 
+      // Download as .txt file
+      function downloadTxtFile() {
+        const text = document.getElementById("userText").value;
+        const fileName =
+          document.getElementById("fileName").value || "myTextFile";
+        const element = document.createElement("a");
+        const file = new Blob([text], { type: "text/plain" });
+        element.href = URL.createObjectURL(file);
+        element.download = fileName + ".txt";
+        document.body.appendChild(element);
+        element.click();
+      }
+
+      // Download as PDF (via Print)
+      function downloadPDF() {
+        const text = document.getElementById("userText").value;
+        const fileName =
+          document.getElementById("fileName").value || "myTextFile";
+
+        // Create a hidden iframe
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.title = fileName;
+        document.body.appendChild(iframe);
+
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(`
+        <html>
+          <head>
+            <title>${fileName}.pdf</title>
+            <style>
+              @page { margin: 0; }
+              body { margin: 0; }
+              pre {
+                font-family: Arial, "Segoe UI", Helvetica, sans-serif;
+                font-size: 20px; margin: 60px;
+                white-space: pre-wrap;
+              }
+            </style>
+          </head>
+          <body>
+            <pre>${text}</pre>
+          </body>
+        </html>
+      `);
+        doc.close();
+
+        // Trigger print -> user can save as PDF
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+
+        // Clean up iframe after a delay
+        setTimeout(() => document.body.removeChild(iframe), 1000);
+      }
+    </script>
+  </body>
 </html>
