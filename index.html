@@ -140,41 +140,30 @@
         const fileName =
           document.getElementById("fileName").value || "myTextFile";
 
-        // Create a hidden iframe
-        const iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        iframe.title = fileName;
-        document.body.appendChild(iframe);
-
-        const doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(`
-        <html>
-          <head>
-            <title>${fileName}.pdf</title>
-            <style>
-              @page { margin: 0; }
-              body { margin: 0; }
-              pre {
-                font-family: Arial, "Segoe UI", Helvetica, sans-serif;
-                font-size: 20px; margin: 60px;
-                white-space: pre-wrap;
-              }
-            </style>
-          </head>
-          <body>
-            <pre>${text}</pre>
-          </body>
-        </html>
-      `);
-        doc.close();
-
-        // Trigger print -> user can save as PDF
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-
-        // Clean up iframe after a delay
-        setTimeout(() => document.body.removeChild(iframe), 1000);
+        const win = window.open("", "_blank");
+        win.document.write(`
+    <html>
+      <head>
+        <title>${fileName}</title>
+        <style>
+          @page { margin: 0; }
+           body { margin: 0; }
+          pre {
+             font-family: Arial, "Segoe UI", Helvetica, sans-serif;
+            font-size: 24px;
+            margin: 60px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+          }
+        </style>
+      </head>
+      <body>
+        <pre>${text}</pre>
+      </body>
+    </html>
+  `);
+        win.document.close();
+        win.print(); // opens system "Save as PDF" automatically
       }
     </script>
   </body>
